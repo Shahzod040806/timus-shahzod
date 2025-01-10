@@ -1,0 +1,57 @@
+/* 1233. Amusing Numbers - http://acm.timus.ru/problem.aspx?num=1233
+ *
+ * Strategy:
+ * Calculate the number of numbers we necessarily have to the left of the given number K, and then
+ * increase the number of digits of N in order to add more numbers to the left of K to reach the
+ * necessary M. For example, for K = 2 and M = 43, we necessarily have 1 before 2, but beyond this
+ * we then need the full range of numbers 10 through 19, and the remaining 31 of the 42 (=43-1)
+ * numbers we get from the beginning of the range 100 through 199, specifically 100 to 130, leading
+ * to the answer of N = 130.
+ *
+ * Performance:
+ * O(log M), runs the tests in 0.015s using 392KB memory.
+ */
+
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+    int K, M;
+    cin >> K >> M;
+
+    // Найдем количество цифр в числе K
+    int numDigitsK = floor(log10(K)) + 1;
+
+    // Посчитаем количество чисел, которое точно идет слева от K
+    int requiredLeftNumbers = pow(10, numDigitsK - 1) - 1;
+
+    // Убедимся, что требуемое количество чисел М больше, чем уже имеется слева от K
+    if (requiredLeftNumbers >= M) {
+        cout << K - (requiredLeftNumbers - M + 1) << endl;
+        return 0;
+    }
+
+    // Теперь добавим недостающие числа справа от K
+    int additionalNeeded = M - requiredLeftNumbers;
+    int nextPowerOfTen = pow(10, numDigitsK);
+    int rangeEnd = K + additionalNeeded;
+
+    // Найти ближайшее большее число с нужным количеством цифр
+    while (rangeEnd >= nextPowerOfTen) {
+        nextPowerOfTen *= 10;
+        numDigitsK++;
+    }
+
+    // Найти первую цифру следующего диапазона
+    int firstDigitNextRange = rangeEnd / pow(10, numDigitsK - 1);
+
+    // Формирование ответа
+    int answer = firstDigitNextRange * pow(10, numDigitsK - 1) + rangeEnd % pow(10, numDigitsK - 1);
+    cout << answer << endl;
+
+    return 0;
+}
