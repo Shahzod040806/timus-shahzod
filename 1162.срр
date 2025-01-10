@@ -1,0 +1,70 @@
+/* 1162. Currency Exchange - http://acm.timus.ru/problem.aspx?num=1162
+ *
+ * Strategy:
+ * Bellman-Ford.
+ *
+ * Performance:
+ * O(NM), runs in 0.015s using 440KB memory.
+ */
+
+#include <iostream>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+const double INF = 1e9;
+
+// Функция для выполнения алгоритма Беллмана-Форда
+bool bellmanFord(int n, vector<vector<pair<int, double>>> &graph, vector<double> &dist) {
+    dist.assign(n, INF);
+    dist[0] = 1.0;
+
+    bool updated;
+    for (int i = 0; i < n - 1; ++i) {
+        updated = false;
+        for (int u = 0; u < n; ++u) {
+            for (auto &[v, weight] : graph[u]) {
+                if (dist[u] != INF && dist[v] > dist[u] * weight) {
+                    dist[v] = dist[u] * weight;
+                    updated = true;
+                }
+            }
+        }
+        if (!updated) break;
+    }
+
+    // Проверка наличия отрицательного цикла
+    for (int u = 0; u < n; ++u) {
+        for (auto &[v, weight] : graph[u]) {
+            if (dist[u] != INF && dist[v] > dist[u] * weight) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<pair<int, double>>> graph(n);
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        double weight;
+        cin >> u >> v >> weight;
+        u--; v--;
+        graph[u].emplace_back(v, weight);
+    }
+
+    vector<double> dist;
+    if (bellmanFord(n, graph, dist)) {
+        cout << "YES\n";
+    } else {
+        cout << "NO\n";
+    }
+
+    return 0;
+}
