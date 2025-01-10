@@ -1,0 +1,42 @@
+/* 1107. Warehouse Problem - http://acm.timus.ru/problem.aspx?num=1107
+ *
+ * Strategy:
+ * The difference of the sums of any two similar sets must be between 1 and N (since all sets are
+ * unique) so we use the modulus of the sum of each set to determine the number of the shop.
+ *
+ * Performance:
+ * Linear in the size of the input, runs in 0.343s using 184KB memory.
+ */
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    unordered_map<int, int> shops;
+
+    for (int i = 0; i < n; ++i) {
+        int k;
+        cin >> k;
+
+        int sum = 0;
+        for (int j = 0; j < k; ++j) {
+            int item;
+            cin >> item;
+            sum += item;
+        }
+
+        shops[sum % n] = i + 1;
+    }
+
+    for (int i = 0; i < n; ++i) {
+        cout << shops[i] << endl;
+    }
+
+    return 0;
+}
