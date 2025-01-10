@@ -1,0 +1,78 @@
+/* 1029. Ministry - http://acm.timus.ru/problem.aspx?num=1029
+ *
+ * Strategy:
+ * Dijkstra.
+ *
+ * Performance:
+ * O(MN log(MN)). This is not optimal since there is an O(MN) solution using simple
+ * dynamic programming.
+ */
+
+
+ #include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+using namespace std;
+
+// Директории движения: вверх, вниз, влево, вправо
+int dx[] = {-1, 1, 0, 0};
+int dy[] = {0, 0, -1, 1};
+
+struct Cell {
+    int x, y;
+    int distance;
+    
+    bool operator<(const Cell& other) const {
+        return distance > other.distance; // Минимальный приоритетный элемент извлекается первым
+    }
+};
+
+int dijkstra(const vector<vector<int>>& grid, int M, int N) {
+    vector<vector<bool>> visited(M, vector<bool>(N, false));
+    priority_queue<Cell> pq;
+    
+    // Начальная клетка
+    pq.push({0, 0, grid[0][0]});
+    visited[0][0] = true;
+    
+    while (!pq.empty()) {
+        Cell current = pq.top();
+        pq.pop();
+        
+        if (current.x == M - 1 && current.y == N - 1) {
+            return current.distance;
+        }
+        
+        for (int i = 0; i < 4; ++i) {
+            int nx = current.x + dx[i];
+            int ny = current.y + dy[i];
+            
+            if (nx >= 0 && nx < M && ny >= 0 && ny < N && !visited[nx][ny]) {
+                int newDistance = max(current.distance, grid[nx][ny]);
+                
+                pq.push({nx, ny, newDistance});
+                visited[nx][ny] = true;
+            }
+        }
+    }
+    
+    return INT_MAX; // Если путь невозможен
+}
+
+int main() {
+    int M, N;
+    cin >> M >> N;
+    
+    vector<vector<int>> grid(M, vector<int>(N));
+    
+    for (int i = 0; i < M; ++i) {
+        for (int j = 0; j < N; ++j) {
+            cin >> grid[i][j];
+        }
+    }
+    
+    cout << dijkstra(grid, M, N) << endl;
+    
+    return 0;
+}
