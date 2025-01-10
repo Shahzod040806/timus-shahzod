@@ -1,0 +1,82 @@
+/* 1050. Preparing an Article - http://acm.timus.ru/problem.aspx?num=1050
+ *
+ * Strategy:
+ * Straightforward parsing according to the rules given.
+ *
+ * Performance:
+ * Runs the tests in 0.015s using 144KB memory.
+ */
+
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <algorithm>
+
+std::string formatTitle(std::string title, int level) {
+    std::stringstream ss;
+    ss << std::string(level, '#') << " ";
+    ss << title.substr(level + 1);
+    return ss.str();
+}
+
+std::string wrapLine(std::string line, int maxLength) {
+    std::istringstream iss(line);
+    std::ostringstream oss;
+    std::string word;
+    int currentLength = 0;
+
+    while (iss >> word) {
+        if (currentLength + word.length() > maxLength) {
+            oss << '\n';
+            currentLength = 0;
+        }
+        if (currentLength > 0) {
+            oss << ' ';
+            currentLength++;
+        }
+        oss << word;
+        currentLength += word.length();
+    }
+
+    return oss.str();
+}
+
+int main() {
+    std::string input;
+    std::getline(std::cin, input);
+
+    std::vector<std::string> lines;
+    std::istringstream iss(input);
+    std::string line;
+
+    while (std::getline(iss, line)) {
+        lines.push_back(line);
+    }
+
+    std::vector<std::string> outputLines;
+    bool inTitleMode = false;
+    int titleLevel = 0;
+
+    for (const auto &line : lines) {
+        if (line.empty()) {
+            outputLines.push_back("");
+            continue;
+        }
+
+        if (inTitleMode) {
+            outputLines.push_back(formatTitle(line, titleLevel));
+            inTitleMode = false;
+        } else if (line[0] == '%') {
+            titleLevel = line.find_first_not_of('%');
+            inTitleMode = true;
+        } else {
+            outputLines.push_back(wrapLine(line, 60));
+        }
+    }
+
+    for (const auto &line : outputLines) {
+        std::cout << line << '\n';
+    }
+
+    return 0;
+}
