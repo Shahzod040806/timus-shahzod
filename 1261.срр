@@ -1,0 +1,48 @@
+/* 1261. Tips - http://acm.timus.ru/problem.aspx?num=1261
+ *
+ * Strategy:
+ * Brute-force - try all sums of powers of 3 up to 3^k for (3^k-1)/2 < N
+ *
+ * Performance:
+ * O(N log N), runs the test cases in 0.001s using 240KB memory.
+ */
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+    int N;
+    cin >> N;
+
+    // Максимальное значение k, при котором 3^k < N
+    int k = (int)(log((double)N) / log(3.0));
+
+    // Генерируем все возможные степени тройки до 3^k
+    vector<int> powers;
+    for (int i = 0; i <= k; ++i) {
+        powers.push_back(pow(3, i));
+    }
+
+    // Перебираем все возможные комбинации степеней тройки
+    int minCount = N;
+    for (int mask = 0; mask < (1 << powers.size()); ++mask) {
+        int sum = 0;
+        int count = 0;
+        for (int i = 0; i < powers.size(); ++i) {
+            if (mask & (1 << i)) {
+                sum += powers[i];
+                count++;
+            }
+        }
+        if (sum == N) {
+            minCount = min(minCount, count);
+        }
+    }
+
+    cout << minCount << endl;
+
+    return 0;
+}
