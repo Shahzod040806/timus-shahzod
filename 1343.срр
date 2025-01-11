@@ -1,0 +1,39 @@
+/* 1343. Fairy Tale - http://acm.timus.ru/problem.aspx?num=1343
+ *
+ * Strategy:
+ * Straightforward. Extend the given number with zeroes, test for primality, and increment.
+ *
+ * Performance:
+ * Runs the tests in 0.031s using 152,KB memory.
+ */
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+// Функция для проверки простоты числа
+bool isPrime(long long n) {
+    if (n <= 1) return false;
+    for (long long i = 2; i * i <= n; i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    long long extendedNumber = n;
+
+    // Расширить число нулями до ближайшего простого числа
+    while (!isPrime(extendedNumber)) {
+        extendedNumber *= 10;
+    }
+
+    cout << extendedNumber << endl;
+
+    return 0;
+}
