@@ -1,0 +1,52 @@
+/* 1331. http://acm.timus.ru/problem.aspx?num=1331
+ *
+ * Strategy:
+ * Turn the given long/lat into cartesian unit vectors and brute-force find the minimum dot product.
+ *
+ * Performance:
+ * O(NM), runs the tests in 0.234s using 540KB memory.
+ */
+
+ #include <iostream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+// Функция для преобразования долготы и широты в единичные векторы
+void convertToUnitVector(double lon, double lat, double& x, double& y, double& z) {
+    lon = lon * M_PI / 180.0;
+    lat = lat * M_PI / 180.0;
+
+    x = cos(lat) * cos(lon);
+    y = cos(lat) * sin(lon);
+    z = sin(lat);
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<double> xs(n);
+    vector<double> ys(n);
+    vector<double> zs(n);
+
+    for (int i = 0; i < n; ++i) {
+        double lon, lat;
+        cin >> lon >> lat;
+        convertToUnitVector(lon, lat, xs[i], ys[i], zs[i]);
+    }
+
+    double bestDotProduct = 2.0; // Начальное значение, предполагая, что угол между векторами равен 0
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            double dotProduct = xs[i] * xs[j] + ys[i] * ys[j] + zs[i] * zs[j];
+            bestDotProduct = min(bestDotProduct, dotProduct);
+        }
+    }
+
+    cout << fixed << setprecision(12) << acos(bestDotProduct) * 180.0 / M_PI << endl;
+
+    return 0;
+}
