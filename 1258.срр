@@ -1,0 +1,30 @@
+/* 1258. Pool - http://acm.timus.ru/problem.aspx?num=1258
+ *
+ * Strategy:
+ * Calculate the total horizontal and vertical distances travelled from the bounce data given, and
+ * then report their hypotenuse.
+ *
+ * Performance:
+ * Linear in the size of the input, uses 0.015s time and 456KB memory to execute the test cases.
+ */
+
+
+ #include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+    int x1, y1, x2, y2;
+    cin >> x1 >> y1 >> x2 >> y2;
+
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+
+    double distance = sqrt(dx * dx + dy * dy);
+
+    cout.precision(20);
+    cout << fixed << distance << endl;
+
+    return 0;
+}
