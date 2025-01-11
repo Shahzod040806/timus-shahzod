@@ -1,0 +1,32 @@
+/* 1360. Philosophical Dispute - http://acm.timus.ru/problem.aspx?num=1360
+ *
+ * Strategy:
+ * Set t to acos(y) to get the y coordinate right, increase t by 2pi until x meets the precision.
+ *
+ * Performance:
+ * O(1/ε), runs the tests in 0.015s using 16KB memory.
+ */
+
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+    double x, y;
+    cin >> x >> y;
+
+    double t = acos(y);
+    double pi = acos(-1.0);
+
+    while (true) {
+        if (fabs(t - x) < 1e-6) {
+            cout << fixed << setprecision(6) << t << endl;
+            return 0;
+        }
+        t += 2 * pi;
+    }
+
+    return 0;
+}
